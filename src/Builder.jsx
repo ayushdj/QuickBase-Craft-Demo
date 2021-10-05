@@ -153,6 +153,7 @@ function Builder() {
 
     // Creating a dictionary of values to store the state variables
     const [values, setValues] = useState({
+
             // Variable to keep track of the label. Updates Every time we type something/delete something
             label: "",
             
@@ -168,7 +169,7 @@ function Builder() {
 
             // This boolean is a state variable that decides if a user wants to
             // order the list of choices they entered
-            orderChoices: false
+            orderAlphabetically: false
         }
     );
 
@@ -185,25 +186,34 @@ function Builder() {
     // defining a state variable that provides an alert when a user exceeds 50 input values
     const [moreThan50Alert, setMoreThan50Alert] = useState(false);
     
-    // creating an event handler function to update the label state variable
+    // update the label state variable
     const handleLabelInputChange = (event) => {
         // set the label
         setValues({...values, label:event.target.value})
+
+        // storing in local storage
+        localStorage.setItem("label", JSON.stringify(values.label));
     }
 
-    // creating an event handler function to update the defaultChoice state variable
+    // creating an event handler for the check box
+    const handleCheck = (event) => {
+        // set the value for the multi-select
+        setValues({...values, multiSelect:event.target.checked});
+
+        // storing in local storage
+        localStorage.setItem("multiSelect", JSON.stringify(values.multiSelect));
+    }
+
+    // update the defaultChoice state variable
     const handleDefaultInputChange = (event) => {
         // set the default choice
         setValues({...values, defaultChoice:event.target.value})
+
+        // storing in local storage
+        localStorage.setItem("defaultChoice", JSON.stringify(values.defaultChoice));
     }
 
-    // event handler function to reset all fields should the user want to do that
-    const handleResetFields = (event) => {      
-        // reload the page 
-        window.location.reload(false);
-    }
-
-    // creating an event handler function to update the choices state variable
+    // update the choices state variable
     const handleChoicesInputChange = (event) => {
 
         // We pass in the updated choices string to the validateChoices function we
@@ -217,6 +227,25 @@ function Builder() {
 
         // set the values associated with the choices
         setValues({...values, choices:event.target.value})
+
+        // storing in local storage
+        localStorage.setItem("choices", JSON.stringify(values.defaultChoice));
+    }
+
+    // creating an event handler function that allows the user to get rid of the 
+    // "success" message that pops up after the user has submitted the changes they want
+    const handleDismiss = (event) => {
+        if (dismiss) {
+            setDismiss(!dismiss);
+        }
+    }
+
+    // creating an event handler for if the user wants to organize
+    // the choices array alphabetically
+    const handleAlphabeticalOrdering = (event) => {
+        // set the values
+        setValues({...values, orderAlphabetically:event.target.checked})
+        localStorage.setItem("orderAlphabetically", JSON.stringify(values.orderAlphabetically));
     }
     
     // creating an event handler function to update the changes made to the form
@@ -236,7 +265,7 @@ function Builder() {
             
             // If the builder wants the end-user to see a sorted list of choices,
             // then we sort that array of choices
-            if (values.orderChoices) {
+            if (values.orderAlphabetically) {
                 parsedChoices.sort();
             }
 
@@ -245,16 +274,12 @@ function Builder() {
             const json = {
                 "label" : values.label, 
                 "multiSelect" : values.multiSelect,
-                "defaultChoice" : values.defaultChoice,
+                "defaultValue" : values.defaultChoice,
                 "choices" : parsedChoices,
-                "orderAlphabetically" : values.orderChoices
+                "orderAlphabetically" : values.orderAlphabetically
             };
 
-            // Log to the console as an indication that the JSON object has
-            // been created, as per the specification
-            console.log(json);
-
-
+            // posting JSON to API
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "http://www.mocky.io/v2/566061f21200008e3aabd919", true);
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -262,8 +287,15 @@ function Builder() {
                 json
             }));
 
+            // Log to the console as an indication that the JSON object has
+            // been created, as per the specification
+            console.log(json);
+
             // Set the saved changes to be true
             setSavedChanges(true);
+
+            // clearing local storage after a user has submitted the form
+            localStorage.clear();
         } else {
             // if either condition is violated (i.e. a user enters more than 50 distinct 
             // values in the choices field OR they have duplicates), we set the state 
@@ -272,23 +304,13 @@ function Builder() {
         }
     }
 
-    // creating an event handler function that allows the user to get rid of the 
-    // "success" message that pops up after the user has submitted the changes they want
-    const handleDismiss = (event) => {
-        if (dismiss) {
-            setDismiss(!dismiss);
-        }
-    }
- 
-    // creating an event handler for the check box
-    const handleCheck = (event) => {
-        setValues({...values, multiSelect:event.target.checked});
-    }
+    // event handler function to reset all fields should the user want to do that
+    const handleResetFields = (event) => {      
+        // reload the page 
+        window.location.reload(false);
 
-    // creating an event handler for if the user wants to organize
-    // the choices array alphabetically
-    const handleAlphabeticalOrdering = (event) => {
-        setValues({...values, orderChoices:event.target.checked})
+        // clearing the local storage if the user resets everything
+        localStorage.clear();
     }
 
     return (
@@ -315,7 +337,7 @@ function Builder() {
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Type</Form.Label></Col> 
                                 <Col xs={3} sm={3} md={3} lg={3}>Multi-Select</Col>
                                 <Col xs={5} sm={5} md={5} lg={5} style={{marginLeft:"-35px"}}><Form.Check type="checkbox" 
-                                    label="A Value is required" onChange={handleCheck}/></Col>
+                                    label="A Value is required" onChange={handleCheck} value={values.multiSelect}/></Col>
                             </Row>
                     
                     
@@ -345,12 +367,12 @@ function Builder() {
                                 <div className="alert alert-danger" role="alert">
                                 Uh oh! You have exceeded your limit of 50 choices. Please delete some choices to stay within the 
                                 limit</div></Col></Row> : null}
-                        
+                
                             {/* The ordering field */}
                             <Row style={{marginTop:"15px"}}>
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Order</Form.Label></Col> 
                                 <Col xs={6} sm={6} md={6} lg={6}><Form.Check type="checkbox" label="Order choices alphabetically" 
-                                    onChange={handleAlphabeticalOrdering}/></Col>
+                                    onChange={handleAlphabeticalOrdering} value={values.orderAlphabetically}/></Col>
                             </Row>
                             
                             {/* Creating the buttons */}
