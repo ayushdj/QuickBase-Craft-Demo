@@ -323,9 +323,10 @@ function Builder() {
     }
 
     return (
+        
         /* Wrap everything in a div because we don't want the form to hug the top of the page */
         <div className="py-5"> 
-            <Card style={{width:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}} xs={5}>
+            <Card style={{width:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}} content={"width=device-width, initial-scale=1"} xs={5}>
                 {/*Creating an alert for when the user submits the form*/}
                 {savedChanges ? <Alert variant="success" dismissible={true} show={dismiss} onClose={handleDismiss}>
                             Success! Your changes have been saved</Alert> : null}
