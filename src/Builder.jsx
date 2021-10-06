@@ -40,6 +40,7 @@ function validateChoices(choices, defaultVal) {
         arrayOfChoices.push(defaultVal);
     }
 
+    // print to console just to visualize
     console.log(arrayOfChoices);
     
     // variable to figure out if we have a duplicate in the choices
@@ -69,6 +70,7 @@ function validateChoices(choices, defaultVal) {
         // If the value associated with the current string is greater than 1, then we set the 
         // boolean hasDuplicate to be true.
         if (frequencyCount[string] > 1) {
+            // set to true and break
             hasDuplicate = true;
             break;
         }
@@ -79,6 +81,7 @@ function validateChoices(choices, defaultVal) {
         // If the value associated with the current string is 1 and only 1, then we increase
         // the number of unique choices.
         if (frequencyCount[str] === 1) {
+            // increment 
             numUniqueChoices++;
         }
     }
@@ -87,12 +90,14 @@ function validateChoices(choices, defaultVal) {
     // isViolation[1] = a boolean representing whether the user has entered more than 50 choices in the "choices" field
     var isViolation = [false, false];
 
-    // If we have found a duplicate, then we set the 0'th field to be true
+    // If we have found a duplicate, then we set the first element to be
+    // true
     if (hasDuplicate) {
         isViolation[0] = true;
     }
 
-    // If we found the number of unique choices to exceed 50, then we let the user know
+    // If we found the number of unique choices to exceed 50, then we set
+    // the second element to be true
     if (numUniqueChoices > 5) {
         isViolation[1] = true;
     }
@@ -151,26 +156,26 @@ function splitInput(choices, defaultChoice) {
  */
 function Builder() {
 
-    // Creating a dictionary of values to store the state variables
+    // Creating an object of values to store the state variables
     const [values, setValues] = useState({
 
-            // Variable to keep track of the label. Updates Every time we type something/delete something
-            label: "",
-            
-            // Keeps track of the check box
-            multiSelect: false,
+        // Variable to keep track of the label. Updates Every time we type something/delete something
+        label: '',
+        
+        // Keeps track of the check box
+        required: false,
 
-            // Variable to keep track of what the user puts in the default field
-            defaultChoice: "",
+        // Variable to keep track of what the user puts in the default field
+        defaultChoice: '',
 
-            // We have a string to keep track of the choices that the user enters and we will then
-            // split this string based on new line characters
-            choices: "",
+        // We have a string to keep track of the choices that the user enters and we will then
+        // split this string based on new line characters
+        choices: '',
 
-            // This boolean is a state variable that decides if a user wants to
-            // order the list of choices they entered
-            orderAlphabetically: false
-        }
+        // This boolean is a state variable that decides if a user wants to
+        // order the list of choices they entered
+        displayAlpha: false
+    }
     );
 
     // A state variable to keep track of the changes we make to submit the form
@@ -190,27 +195,18 @@ function Builder() {
     const handleLabelInputChange = (event) => {
         // set the label
         setValues({...values, label:event.target.value})
-
-        // storing in local storage
-        localStorage.setItem("label", JSON.stringify(values.label));
     }
 
     // creating an event handler for the check box
     const handleCheck = (event) => {
         // set the value for the multi-select
-        setValues({...values, multiSelect:event.target.checked});
-
-        // storing in local storage
-        localStorage.setItem("multiSelect", JSON.stringify(values.multiSelect));
+        setValues({...values, required:event.target.checked});
     }
 
     // update the defaultChoice state variable
     const handleDefaultInputChange = (event) => {
         // set the default choice
         setValues({...values, defaultChoice:event.target.value})
-
-        // storing in local storage
-        localStorage.setItem("defaultChoice", JSON.stringify(values.defaultChoice));
     }
 
     // update the choices state variable
@@ -227,9 +223,6 @@ function Builder() {
 
         // set the values associated with the choices
         setValues({...values, choices:event.target.value})
-
-        // storing in local storage
-        localStorage.setItem("choices", JSON.stringify(values.defaultChoice));
     }
 
     // creating an event handler function that allows the user to get rid of the 
@@ -244,8 +237,7 @@ function Builder() {
     // the choices array alphabetically
     const handleAlphabeticalOrdering = (event) => {
         // set the values
-        setValues({...values, orderAlphabetically:event.target.checked})
-        localStorage.setItem("orderAlphabetically", JSON.stringify(values.orderAlphabetically));
+        setValues({...values, displayAlpha:event.target.checked})
     }
     
     // creating an event handler function to update the changes made to the form
@@ -265,7 +257,7 @@ function Builder() {
             
             // If the builder wants the end-user to see a sorted list of choices,
             // then we sort that array of choices
-            if (values.orderAlphabetically) {
+            if (values.displayAlpha) {
                 parsedChoices.sort();
             }
 
@@ -273,17 +265,17 @@ function Builder() {
             // the input fields
             const json = {
                 "label" : values.label, 
-                "multiSelect" : values.multiSelect,
-                "defaultValue" : values.defaultChoice,
+                "required" : values.required,
                 "choices" : parsedChoices,
-                "orderAlphabetically" : values.orderAlphabetically
+                "displayAlpha" : values.displayAlpha,
+                "default" : values.defaultChoice,
             };
 
             // posting JSON to API provided
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://www.mocky.io/v2/566061f21200008e3aabd919", true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({
+            var postObject = new XMLHttpRequest();
+            postObject.open("POST", "http://www.mocky.io/v2/566061f21200008e3aabd919", true);
+            postObject.setRequestHeader('Content-Type', 'application/json');
+            postObject.send(JSON.stringify({
                 json
             }));
 
@@ -293,9 +285,6 @@ function Builder() {
 
             // Set the saved changes to be true
             setSavedChanges(true);
-
-            // clearing local storage after a user has submitted the form
-            localStorage.clear();
         } else {
             // if either condition is violated (i.e. a user enters more than 50 distinct 
             // values in the choices field OR they have duplicates), we set the state 
@@ -308,9 +297,6 @@ function Builder() {
     const handleResetFields = (event) => {      
         // reload the page 
         window.location.reload(false);
-
-        // clearing the local storage if the user resets everything
-        localStorage.clear();
     }
 
     return (
@@ -337,14 +323,14 @@ function Builder() {
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Type</Form.Label></Col> 
                                 <Col xs={3} sm={3} md={3} lg={3}>Multi-Select</Col>
                                 <Col xs={5} sm={5} md={5} lg={5} style={{marginLeft:"-35px"}}><Form.Check type="checkbox" 
-                                    label="A Value is required" onChange={handleCheck} value={values.multiSelect}/></Col>
+                                    label="A Value is required" onChange={handleCheck} value={values.required}/></Col>
                             </Row>
                     
                     
                             {/* The Default field */}
                             <Row style={{marginTop:"15px"}}> 
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Default Value</Form.Label></Col>
-                                <Col xs={7} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="text" placeholder="Default Choice" 
+                                <Col xs={7} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Default Choice" 
                                 required={true} name="default" onChange={handleDefaultInputChange} value ={values.defaultChoice}/></Col>
                             </Row>
 
@@ -372,7 +358,7 @@ function Builder() {
                             <Row style={{marginTop:"15px"}}>
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Order</Form.Label></Col> 
                                 <Col xs={6} sm={6} md={6} lg={6}><Form.Check type="checkbox" label="Order choices alphabetically" 
-                                    onChange={handleAlphabeticalOrdering} value={values.orderAlphabetically}/></Col>
+                                    onChange={handleAlphabeticalOrdering} value={values.displayAlpha}/></Col>
                             </Row>
                             
                             {/* Creating the buttons */}
