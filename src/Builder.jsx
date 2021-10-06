@@ -322,7 +322,7 @@ function Builder() {
                             Success! Your changes have been saved</Alert> : null}
                 <Card.Header style={{backgroundColor:"#E1F5FE", fontWeight:"bold", color:"#4682b4"}}>Field Builder</Card.Header>
                 <Card.Body style={{marginLeft:"10px", marginRight:"10px"}}>
-                    <Form onSubmit={handleSaveChanges} autocomplete="on">
+                    <Form onSubmit={handleSaveChanges}>
                         <Form.Group>
                             {/* The Label field */}
                             <Row>

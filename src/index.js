@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 ReactDOM.render(
   <React.Fragment>
-    <Builder />
+    <Builder/>
   </React.Fragment>,
   document.getElementById('root')
 );
