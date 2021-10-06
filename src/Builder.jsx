@@ -110,7 +110,7 @@ function validateChoices(choices, defaultVal) {
 
     // If we found the number of unique choices to exceed 50, then we set
     // the second element to be true
-    if (numUniqueChoices > 5) {
+    if (numUniqueChoices > 50) {
         isViolation[1] = true;
     }
 
