@@ -2,7 +2,7 @@
  * Importing the necessary modules from React
  */
 import React from 'react';
-import {Form, Button, Row, Col, Alert, Card} from 'react-bootstrap'
+import {Form, Button, Row, Col, Alert, Card, Container} from 'react-bootstrap'
 import {useState} from 'react';
 
 /**
@@ -110,7 +110,7 @@ function validateChoices(choices, defaultVal) {
 
     // If we found the number of unique choices to exceed 50, then we set
     // the second element to be true
-    if (numUniqueChoices > 50) {
+    if (numUniqueChoices > 5) {
         isViolation[1] = true;
     }
 
@@ -326,7 +326,7 @@ function Builder() {
         
         /* Wrap everything in a div because we don't want the form to hug the top of the page */
         <div className="py-5"> 
-            <Card style={{width:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}} content={"width=device-width, initial-scale=1"} xs={5}>
+            <Card style={{minWidth:'20rem', maxWidth:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}} xs={3}>
                 {/*Creating an alert for when the user submits the form*/}
                 {savedChanges ? <Alert variant="success" dismissible={true} show={dismiss} onClose={handleDismiss}>
                             Success! Your changes have been saved</Alert> : null}
@@ -368,17 +368,17 @@ function Builder() {
                             </Row>
 
                             {/* Setting the conditional that will trigger the alerts about having duplicate choices*/}
-                            {duplicateAlert ? <Row style={{marginLeft:"110px", marginTop:"15px"}}><Col sm={10} md={10} lg={10} xs={10}> <div 
-                                className="alert alert-danger" marginTop="30px" role="alert">
+                            {duplicateAlert ? <Row style={{marginLeft:"1.5rem", marginTop:"15px"}}><Col> 
+                            <div className="alert alert-danger" role="alert">
                                 Uh oh! You have already previously entered your most recent choice. Please delete and enter another.</div></Col></Row>: null}
 
                             {/* Setting the conditional that will trigger the alerts about having more than 50 choices entered*/}
-                            {moreThan50Alert ? <Row style={{marginLeft:"110px", marginTop:"15px"}}><Col sm={10} md={10} lg={10} xs={10}> 
+                            {moreThan50Alert ? <Row style={{marginLeft:"1.5rem", marginTop:"15px"}}><Col> 
                                 <div className="alert alert-danger" role="alert">
                                 Uh oh! You have exceeded your limit of 50 choices. Please delete the latest choice you entered to stay within the 
                                 limit.</div></Col></Row> : null}
 
-                            {charLimitExceededAlert ? <Row style={{marginLeft:"110px", marginTop:"15px"}}><Col sm={10} md={10} lg={10} xs={10}> 
+                            {charLimitExceededAlert ? <Row style={{marginLeft:"1.5rem", marginTop:"15px"}}><Col> 
                                 <div className="alert alert-danger" role="alert">
                                 Uh oh! Your latest choice exceeds the 40 character limit. Choices must be within 40 characters in length.
                                 </div></Col></Row> : null}    
@@ -392,10 +392,10 @@ function Builder() {
                             
                             {/* Creating the buttons */}
                             <Row style={{marginTop:"10px", marginLeft:"30px"}} className="justify-content-center">
-                                <Col lg="auto" md="auto" sm="auto" xs="auto"><Button variant="success" type="btn btn-success">Save Changes</Button></Col>
-                                <Col lg="auto" md="auto" sm="auto" xs="auto" style={{marginTop:"7px", marginLeft:"-10px", marginRight:"-10px"}}>Or</Col>
-                                <Col lg="auto" md="auto" sm="auto" xs="auto"><Button type="reset" onClick={handleResetFields} 
-                                    className="btn btn-danger">Reset Form</Button></Col>
+                                <Col lg="auto" md="auto" sm="auto" xs="auto"><Button variant="success" type="btn btn-success" size="sm">Save Changes</Button></Col>
+                                <Col lg="auto" md="auto" sm="auto" xs="auto" style={{ marginLeft:"-15px", marginRight:"-15px"}}>Or</Col>
+                                <Col lg="auto" md="auto" sm="auto" xs="auto"><Button size="sm" type="reset" onClick={handleResetFields} 
+                                    className="btn btn-danger">Cancel</Button></Col>
                             </Row>
                         </Form.Group>
                     </Form>
