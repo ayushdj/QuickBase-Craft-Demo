@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Here is the craft demo for the responsive form as requested. The majority of the work is done under the following directory: src/Builder.jsx
 
 ## Available Scripts
 
