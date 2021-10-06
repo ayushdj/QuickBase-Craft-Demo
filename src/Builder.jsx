@@ -296,7 +296,7 @@ function Builder() {
 
             // posting JSON to API provided
             var postObject = new XMLHttpRequest();
-            postObject.open("POST", "http://www.mocky.io/v2/566061f21200008e3aabd919", true);
+            postObject.open("POST", "https://www.mocky.io/v2/566061f21200008e3aabd919", true);
             postObject.setRequestHeader('Content-Type', 'application/json');
             postObject.send(JSON.stringify({
                 json
