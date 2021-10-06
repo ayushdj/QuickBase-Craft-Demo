@@ -336,8 +336,8 @@ function Builder() {
                         <Form.Group>
                             {/* The Label field */}
                             <Row>
-                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Label</Form.Label></Col>
-                                <Col xs={7} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Label" 
+                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Label *</Form.Label></Col>
+                                <Col xs={8} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Label" 
                                     required={true} name="label" onChange={handleLabelInputChange} value={values.label}/>
                                 </Col>
                             </Row>
@@ -354,7 +354,7 @@ function Builder() {
                             {/* The Default field */}
                             <Row style={{marginTop:"15px"}}> 
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Default Value</Form.Label></Col>
-                                <Col xs={7} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Default Choice" 
+                                <Col xs={8} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Default Choice" 
                                 required={true} name="default" onChange={handleDefaultInputChange} value ={values.defaultChoice}/></Col>
                             </Row>
 
@@ -362,7 +362,7 @@ function Builder() {
                             {/* The Choices field */}
                             <Row style={{marginTop:"15px"}}>
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Choices</Form.Label></Col>
-                                <Col xs={7} sm={7} md={7} lg={7}><Form.Control as="textarea" rows={10}
+                                <Col xs={8} sm={7} md={7} lg={7}><Form.Control as="textarea" rows={10}
                                     placeholder="Please add your choices separated by a new line (i.e. every line counts as a single choice)" 
                                     name="choices" onChange={handleChoicesInputChange} value={values.choices}/></Col>
                             </Row>
@@ -386,16 +386,16 @@ function Builder() {
                             {/* The ordering field */}
                             <Row style={{marginTop:"15px"}}>
                                 <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Order</Form.Label></Col> 
-                                <Col xs={6} sm={6} md={6} lg={6}><Form.Check type="checkbox" label="Order choices alphabetically" 
+                                <Col xs={8} sm={6} md={6} lg={6}><Form.Check type="checkbox" label="Order choices alphabetically" 
                                     onChange={handleAlphabeticalOrdering} value={values.displayAlpha}/></Col>
                             </Row>
                             
                             {/* Creating the buttons */}
                             <Row style={{marginTop:"10px", marginLeft:"30px"}} className="justify-content-center">
                                 <Col lg="auto" md="auto" sm="auto" xs="auto"><Button variant="success" type="btn btn-success" size="sm">Save Changes</Button></Col>
-                                <Col lg="auto" md="auto" sm="auto" xs="auto" style={{ marginLeft:"-15px", marginRight:"-15px"}}>Or</Col>
+                                <Col lg="auto" md="auto" sm="auto" xs="auto" style={{ marginLeft:"-20px", marginRight:"-20px", marginTop:"3px"}}>Or</Col>
                                 <Col lg="auto" md="auto" sm="auto" xs="auto"><Button size="sm" type="reset" onClick={handleResetFields} 
-                                    className="btn btn-danger">Cancel</Button></Col>
+                                    className="btn btn-danger">Reset Form</Button></Col>
                             </Row>
                         </Form.Group>
                     </Form>
