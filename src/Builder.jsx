@@ -260,7 +260,7 @@ function Builder() {
         // our json object.
         if (!isChoicesValid[0] && !isChoicesValid[1]) {
             
-            // split the choices state variable but add 
+            // split the choices state variable into an array of strings 
             var parsedChoices = splitInput(values.choices, values.defaultChoice);
             
             // If the builder wants the end-user to see a sorted list of choices,
@@ -279,7 +279,7 @@ function Builder() {
                 "orderAlphabetically" : values.orderAlphabetically
             };
 
-            // posting JSON to API
+            // posting JSON to API provided
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "http://www.mocky.io/v2/566061f21200008e3aabd919", true);
             xhr.setRequestHeader('Content-Type', 'application/json');
