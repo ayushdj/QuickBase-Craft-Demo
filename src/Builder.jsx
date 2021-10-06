@@ -2,7 +2,7 @@
  * Importing the necessary modules from React
  */
 import React from 'react';
-import {Form, Button, Row, Col, Alert, Card, Container} from 'react-bootstrap'
+import {Form, Button, Row, Col, Alert, Card} from 'react-bootstrap'
 import {useState} from 'react';
 
 /**
