@@ -86,9 +86,21 @@ function validateChoices(choices, defaultVal) {
         }
     }
 
+    // boolean that determines if the array of choices has a string that is greater than 40 in length
+    var exceeds40 = false;
+
+    // determining if the user has entered a choice that exceeds 40 characters in length
+    for (let i = 0; i < arrayOfChoices.length; i++) {
+        // if the ith string exceeds 40 in length, set the boolean variable to true
+        if (arrayOfChoices[i].length > 40) {
+            exceeds40 = true;
+        }
+    }
+
     // isViolation[0] = a boolean representing whether the user has entered duplicate values in the "choices" field
     // isViolation[1] = a boolean representing whether the user has entered more than 50 choices in the "choices" field
-    var isViolation = [false, false];
+    // isViolation[2] = boolean representing whether the user has a string that is greater than 40 characters in length
+    var isViolation = [false, false, false];
 
     // If we have found a duplicate, then we set the first element to be
     // true
@@ -100,6 +112,12 @@ function validateChoices(choices, defaultVal) {
     // the second element to be true
     if (numUniqueChoices > 50) {
         isViolation[1] = true;
+    }
+
+    // If a string in the array is greater than 40 characters in length,
+    // then we set that to be true
+    if (exceeds40) {
+        isViolation[2] = true;
     }
     
     // return the isViolation array
@@ -190,6 +208,10 @@ function Builder() {
 
     // defining a state variable that provides an alert when a user exceeds 50 input values
     const [moreThan50Alert, setMoreThan50Alert] = useState(false);
+
+     // defining a state variable that provides an alert when a user exceeds to 40 character
+     // limit
+    const [charLimitExceededAlert, setCharLimitExceededAlert] = useState(false);
     
     // update the label state variable
     const handleLabelInputChange = (event) => {
@@ -217,9 +239,10 @@ function Builder() {
         let returnedArray = validateChoices(values.choices, values.defaultChoice);
         
         // set an alert based on the boolean returned by the function, and then
-        // we set the state for both duplicateAlert and moreThan50Alert
+        // we set the state for duplicateAlert, moreThan50Alert and charLimitExceededAlert
         setDuplicateAlert(returnedArray[0]);
         setMoreThan50Alert(returnedArray[1]);
+        setCharLimitExceededAlert(returnedArray[2]);
 
         // set the values associated with the choices
         setValues({...values, choices:event.target.value})
@@ -248,9 +271,9 @@ function Builder() {
         // validate the choices textarea field and extract the array from that
         let isChoicesValid = validateChoices(values.choices, values.defaultChoice);
 
-        // Only if the value stored in both array indices are false can we construct
+        // Only if the value stored in all array indices are false can we construct
         // our json object.
-        if (!isChoicesValid[0] && !isChoicesValid[1]) {
+        if (!isChoicesValid[0] && !isChoicesValid[1] && !isChoicesValid[2]) {
             
             // split the choices state variable into an array of strings 
             var parsedChoices = splitInput(values.choices, values.defaultChoice);
@@ -346,13 +369,18 @@ function Builder() {
                             {/* Setting the conditional that will trigger the alerts about having duplicate choices*/}
                             {duplicateAlert ? <Row style={{marginLeft:"110px", marginTop:"15px"}}><Col sm={10} md={10} lg={10} xs={10}> <div 
                                 className="alert alert-danger" marginTop="30px" role="alert">
-                                Uh oh! Looks like you have a duplicate choice. Please delete any duplicates you may have</div></Col></Row>: null}
+                                Uh oh! You have already previously entered your most recent choice. Please delete and enter another.</div></Col></Row>: null}
 
                             {/* Setting the conditional that will trigger the alerts about having more than 50 choices entered*/}
                             {moreThan50Alert ? <Row style={{marginLeft:"110px", marginTop:"15px"}}><Col sm={10} md={10} lg={10} xs={10}> 
                                 <div className="alert alert-danger" role="alert">
-                                Uh oh! You have exceeded your limit of 50 choices. Please delete some choices to stay within the 
-                                limit</div></Col></Row> : null}
+                                Uh oh! You have exceeded your limit of 50 choices. Please delete the latest choice you entered to stay within the 
+                                limit.</div></Col></Row> : null}
+
+                            {charLimitExceededAlert ? <Row style={{marginLeft:"110px", marginTop:"15px"}}><Col sm={10} md={10} lg={10} xs={10}> 
+                                <div className="alert alert-danger" role="alert">
+                                Uh oh! Your latest choice exceeds the 40 character limit. Choices must be within 40 characters in length.
+                                </div></Col></Row> : null}    
                 
                             {/* The ordering field */}
                             <Row style={{marginTop:"15px"}}>
