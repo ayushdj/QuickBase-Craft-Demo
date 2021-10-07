@@ -110,7 +110,7 @@ function validateChoices(choices, defaultVal) {
 
     // If we found the number of unique choices to exceed 50, then we set
     // the second element to be true
-    if (numUniqueChoices > 5) {
+    if (numUniqueChoices > 50) {
         isViolation[1] = true;
     }
 
@@ -323,7 +323,6 @@ function Builder() {
     }
 
     return (
-        
         /* Wrap everything in a div because we don't want the form to hug the top of the page */
         <div className="py-5"> 
             <Card style={{minWidth:'20rem', maxWidth:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}}>
