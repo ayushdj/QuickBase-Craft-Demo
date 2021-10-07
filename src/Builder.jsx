@@ -110,7 +110,7 @@ function validateChoices(choices, defaultVal) {
 
     // If we found the number of unique choices to exceed 50, then we set
     // the second element to be true
-    if (numUniqueChoices > 50) {
+    if (numUniqueChoices > 5) {
         isViolation[1] = true;
     }
 
@@ -326,7 +326,7 @@ function Builder() {
         
         /* Wrap everything in a div because we don't want the form to hug the top of the page */
         <div className="py-5"> 
-            <Card style={{minWidth:'20rem', maxWidth:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}} xs={3}>
+            <Card style={{minWidth:'20rem', maxWidth:'35rem' , marginLeft:"auto", marginRight:"auto", border:"2px solid #E1F5FE"}}>
                 {/*Creating an alert for when the user submits the form*/}
                 {savedChanges ? <Alert variant="success" dismissible={true} show={dismiss} onClose={handleDismiss}>
                             Success! Your changes have been saved</Alert> : null}
@@ -336,57 +336,72 @@ function Builder() {
                         <Form.Group>
                             {/* The Label field */}
                             <Row>
-                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Label *</Form.Label></Col>
-                                <Col xs={8} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Label" 
-                                    required={true} name="label" onChange={handleLabelInputChange} value={values.label}/>
-                                </Col>
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}><Form.Label>Label</Form.Label></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}><Form.Control type="text" placeholder="Label" 
+                                    required={true} name="label" onChange={handleLabelInputChange} value={values.label}/></Col>
                             </Row>
+
+                            {/* If the user hasn't entered the label field, then we let them know that it is required. Otherwise we
+                            do nothing */}
+                            { values.label === '' ? <Row>
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}> <span style={{color:"red", fontSize:"15px"}}>*This Field is Required</span></Col>
+                            </Row> : null}    
                     
                             {/* The Type field */}
                             <Row style={{marginTop:"15px"}}>
-                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Type</Form.Label></Col> 
-                                <Col xs={3} sm={3} md={3} lg={3}>Multi-Select</Col>
-                                <Col xs={5} sm={5} md={5} lg={5} style={{marginLeft:"-35px"}}><Form.Check type="checkbox" 
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}><Form.Label>Type</Form.Label></Col> 
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>Multi-Select</Col>
+                                <Col xs={5} sm={5} md={5} lg={5} xl={5} xxl={5} style={{marginLeft:"-35px"}}><Form.Check type="checkbox" 
                                     label="A Value is required" onChange={handleCheck} value={values.required}/></Col>
                             </Row>
                     
                     
                             {/* The Default field */}
                             <Row style={{marginTop:"15px"}}> 
-                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Default Value</Form.Label></Col>
-                                <Col xs={8} sm={7} md={7} lg={7}><Form.Control type="text" placeholder="Default Choice" 
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}><Form.Label>Default Value</Form.Label></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}><Form.Control type="text" placeholder="Default Choice" 
                                 required={true} name="default" onChange={handleDefaultInputChange} value ={values.defaultChoice}/></Col>
                             </Row>
+
+                            {/* If the user hasn't entered the default value, then we let them know that it is required. Otherwise we
+                            do nothing */}
+                            { values.defaultChoice === '' ? <Row>
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}> <span style={{color:"red", fontSize:"15px"}}>*This Field is Required</span></Col>
+                            </Row> : null} 
 
                     
                             {/* The Choices field */}
                             <Row style={{marginTop:"15px"}}>
-                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Choices</Form.Label></Col>
-                                <Col xs={8} sm={7} md={7} lg={7}><Form.Control as="textarea" rows={10}
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}><Form.Label>Choices</Form.Label></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}><Form.Control as="textarea" rows={10}
                                     placeholder="Please add your choices separated by a new line (i.e. every line counts as a single choice)" 
                                     name="choices" onChange={handleChoicesInputChange} value={values.choices}/></Col>
                             </Row>
 
                             {/* Setting the conditional that will trigger the alerts about having duplicate choices*/}
-                            {duplicateAlert ? <Row style={{marginLeft:"1.5rem", marginTop:"15px"}}><Col> 
-                            <div className="alert alert-danger" role="alert">
-                                Uh oh! You have already previously entered your most recent choice. Please delete and enter another.</div></Col></Row>: null}
+                            {duplicateAlert ? <Row style={{marginTop:"15px"}}>
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}> <div className="alert alert-danger" role="alert">Uh oh! Your most recent entry already exists. 
+                                Please delete and enter another.</div></Col></Row>: null}
 
                             {/* Setting the conditional that will trigger the alerts about having more than 50 choices entered*/}
-                            {moreThan50Alert ? <Row style={{marginLeft:"1.5rem", marginTop:"15px"}}><Col> 
-                                <div className="alert alert-danger" role="alert">
-                                Uh oh! You have exceeded your limit of 50 choices. Please delete the latest choice you entered to stay within the 
-                                limit.</div></Col></Row> : null}
+                            {moreThan50Alert ?  <Row style={{marginTop:"15px"}}>
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}> <div className="alert alert-danger" role="alert">Uh oh! You have exceeded your limit of 50 choices. 
+                                Please delete the latest choice you entered to stay within the limit.</div></Col></Row>: null}
 
-                            {charLimitExceededAlert ? <Row style={{marginLeft:"1.5rem", marginTop:"15px"}}><Col> 
-                                <div className="alert alert-danger" role="alert">
+                            {charLimitExceededAlert ? <Row style={{marginTop:"15px"}}>
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}></Col>
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}> <div className="alert alert-danger" role="alert">
                                 Uh oh! Your latest choice exceeds the 40 character limit. Choices must be within 40 characters in length.
                                 </div></Col></Row> : null}    
                 
                             {/* The ordering field */}
                             <Row style={{marginTop:"15px"}}>
-                                <Col xs={3} sm={3} md={3} lg={3}><Form.Label>Order</Form.Label></Col> 
-                                <Col xs={8} sm={6} md={6} lg={6}><Form.Check type="checkbox" label="Order choices alphabetically" 
+                                <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}><Form.Label>Order</Form.Label></Col> 
+                                <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}><Form.Check type="checkbox" label="Display choices in alphabetical order" 
                                     onChange={handleAlphabeticalOrdering} value={values.displayAlpha}/></Col>
                             </Row>
                             
