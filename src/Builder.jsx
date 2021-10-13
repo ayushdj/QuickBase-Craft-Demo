@@ -96,32 +96,18 @@ function validateChoices(choices, defaultVal) {
             exceeds40 = true;
         }
     }
+    let limitExceeded = false;
+    if (numUniqueChoices > 50) limitExceeded = true;
 
-    // isViolation[0] = a boolean representing whether the user has entered duplicate values in the "choices" field
-    // isViolation[1] = a boolean representing whether the user has entered more than 50 choices in the "choices" field
-    // isViolation[2] = boolean representing whether the user has a string that is greater than 40 characters in length
-    var isViolation = [false, false, false];
-
-    // If we have found a duplicate, then we set the first element to be
-    // true
-    if (hasDuplicate) {
-        isViolation[0] = true;
-    }
-
-    // If we found the number of unique choices to exceed 50, then we set
-    // the second element to be true
-    if (numUniqueChoices > 50) {
-        isViolation[1] = true;
-    }
-
-    // If a string in the array is greater than 40 characters in length,
-    // then we set that to be true
-    if (exceeds40) {
-        isViolation[2] = true;
+    // This object keeps track of whether 
+    var violations = {
+        duplicate: hasDuplicate,
+        moreThan50: limitExceeded,
+        charLimitExceeded: exceeds40
     }
     
-    // return the isViolation array
-    return isViolation;
+    // return the violations object
+    return violations;
 }
 
 /**
@@ -209,10 +195,10 @@ function Builder() {
     // defining a state variable that provides an alert when a user exceeds 50 input values
     const [moreThan50Alert, setMoreThan50Alert] = useState(false);
 
-     // defining a state variable that provides an alert when a user exceeds to 40 character
-     // limit
+    // defining a state variable that provides an alert when a user exceeds to 40 character
+    // limit
     const [charLimitExceededAlert, setCharLimitExceededAlert] = useState(false);
-    
+
     // update the label state variable
     const handleLabelInputChange = (event) => {
         // set the label
@@ -229,6 +215,7 @@ function Builder() {
     const handleDefaultInputChange = (event) => {
         // set the default choice
         setValues({...values, defaultChoice:event.target.value})
+        
     }
 
     // update the choices state variable
@@ -236,13 +223,17 @@ function Builder() {
 
         // We pass in the updated choices string to the validateChoices function we
         // defined up above
-        let returnedArray = validateChoices(values.choices, values.defaultChoice);
+        let violations = validateChoices(values.choices, values.defaultChoice);
         
         // set an alert based on the boolean returned by the function, and then
         // we set the state for duplicateAlert, moreThan50Alert and charLimitExceededAlert
-        setDuplicateAlert(returnedArray[0]);
-        setMoreThan50Alert(returnedArray[1]);
-        setCharLimitExceededAlert(returnedArray[2]);
+        //setDuplicateAlert(returnedArray[0]);
+        //setMoreThan50Alert(returnedArray[1]);
+        //setCharLimitExceededAlert(returnedArray[2]);
+
+        setDuplicateAlert(violations.duplicate);
+        setMoreThan50Alert(violations.moreThan50);
+        setCharLimitExceededAlert(violations.charLimitExceeded);
 
         // set the values associated with the choices
         setValues({...values, choices:event.target.value})
@@ -269,11 +260,11 @@ function Builder() {
         event.preventDefault();
 
         // validate the choices textarea field and extract the array from that
-        let isChoicesValid = validateChoices(values.choices, values.defaultChoice);
+        let validChoices = validateChoices(values.choices, values.defaultChoice);
 
         // Only if the value stored in all array indices are false can we construct
         // our json object.
-        if (!isChoicesValid[0] && !isChoicesValid[1] && !isChoicesValid[2]) {
+        if (validChoices.duplicate === false && !validChoices.moreThan50 === false && validChoices.charLimitExceeded === false) {
             
             // split the choices state variable into an array of strings 
             var parsedChoices = splitInput(values.choices, values.defaultChoice);
@@ -383,7 +374,7 @@ function Builder() {
                             {duplicateAlert ? <Row style={{marginTop:"15px"}}>
                                 <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}></Col>
                                 <Col xs={8} sm={8} md={8} lg={8} xl={8} xxl={8}> <div className="alert alert-danger" role="alert">Uh oh! Your most recent entry already exists. 
-                                Please delete and enter another.</div></Col></Row>: null}
+                                Please delete and enter another.</div></Col></Row> : null}
 
                             {/* Setting the conditional that will trigger the alerts about having more than 50 choices entered*/}
                             {moreThan50Alert ?  <Row style={{marginTop:"15px"}}>
