@@ -96,17 +96,16 @@ function validateChoices(choices, defaultVal) {
             exceeds40 = true;
         }
     }
+
     let limitExceeded = false;
     if (numUniqueChoices > 50) limitExceeded = true;
 
-    // This object keeps track of whether 
     var violations = {
         duplicate: hasDuplicate,
         moreThan50: limitExceeded,
         charLimitExceeded: exceeds40
     }
-    
-    // return the violations object
+
     return violations;
 }
 
@@ -264,7 +263,7 @@ function Builder() {
 
         // Only if the value stored in all array indices are false can we construct
         // our json object.
-        if (validChoices.duplicate === false && !validChoices.moreThan50 === false && validChoices.charLimitExceeded === false) {
+        if (validChoices.duplicate === false && validChoices.moreThan50 === false && validChoices.charLimitExceeded === false) {
             
             // split the choices state variable into an array of strings 
             var parsedChoices = splitInput(values.choices, values.defaultChoice);
